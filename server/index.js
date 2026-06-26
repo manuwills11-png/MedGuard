@@ -20,6 +20,47 @@ app.get('/', (req, res) => {
   res.send('MedGuard server is running');
 });
 
+const HIGH_SEVERITY_KEYWORDS = ['fatal', 'severe', 'contraindicated'];
+
+async function checkInteraction(drug1, drug2) {
+  const query = `drug_interactions:"${drug1}" AND "${drug2}"`;
+  const url = `https://api.fda.gov/drug/label.json?search=${encodeURIComponent(query)}&limit=1`;
+
+  try {
+    const response = await fetch(url);
+    if (!response.ok) return null;
+
+    const data = await response.json();
+    if (!data.results || data.results.length === 0) return null;
+
+    const text = (data.results[0].drug_interactions || []).join(' ').toLowerCase();
+    const severity = HIGH_SEVERITY_KEYWORDS.some((word) => text.includes(word)) ? 'high' : 'moderate';
+
+    return {
+      drug1,
+      drug2,
+      severity,
+      message: data.results[0].drug_interactions ? data.results[0].drug_interactions[0] : 'Potential interaction detected',
+    };
+  } catch (err) {
+    console.error(`Interaction check failed for ${drug1} + ${drug2}:`, err);
+    return null;
+  }
+}
+
+async function checkAllInteractions(generics) {
+  const unique = [...new Set(generics)];
+  const pairs = [];
+  for (let i = 0; i < unique.length; i++) {
+    for (let j = i + 1; j < unique.length; j++) {
+      pairs.push([unique[i], unique[j]]);
+    }
+  }
+
+  const results = await Promise.all(pairs.map(([a, b]) => checkInteraction(a, b)));
+  return results.filter(Boolean);
+}
+
 app.post('/api/analyze', upload.single('image'), async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: 'No image uploaded' });
@@ -54,10 +95,12 @@ app.post('/api/analyze', upload.single('image'), async (req, res) => {
 
     const drugs = (parsed.drugs || []).map((brand) => ({
       brand,
-      generic: drugMap[brand] || null,
+      generic: drugMap[brand] || brand.toLowerCase(),
     }));
 
-    res.json({ drugs });
+    const conflicts = await checkAllInteractions(drugs.map((d) => d.generic));
+
+    res.json({ drugs, conflicts });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Failed to analyze image' });

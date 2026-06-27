@@ -1,0 +1,389 @@
+.page {
+  min-height: 100dvh;
+  background: var(--bg);
+  position: relative;
+  overflow-x: hidden;
+}
+
+.bgShapes {
+  position: absolute;
+  inset: 0;
+  background: var(--wave-gradient);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.navbar {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.navInner {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brandIcon {
+  color: var(--teal);
+}
+
+.brandName {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 20px;
+  color: var(--navy);
+}
+
+.howLink {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 14px;
+  padding: 6px 4px;
+  min-height: 44px;
+}
+
+.howLink:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 32px 24px 56px;
+}
+
+.hero {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.heroTitle {
+  font-family: var(--font-display);
+  font-size: 40px;
+  line-height: 1.15;
+  font-weight: 800;
+  color: var(--navy);
+  margin: 0 0 12px;
+}
+
+.heroLight {
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+
+.heroSubtitle {
+  font-size: 16px;
+  color: var(--text-secondary);
+  margin: 0 auto 16px;
+  max-width: 360px;
+}
+
+.trustBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.trustDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--teal);
+}
+
+.zone {
+  position: relative;
+  width: 100%;
+  min-height: 220px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  padding: 12px;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.zoneInner {
+  width: 100%;
+  min-height: 196px;
+  border: 2px dashed #99c4d9;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 24px;
+  background: linear-gradient(180deg, #f3faff 0%, #ffffff 100%);
+}
+
+.zoneIcon {
+  color: var(--primary);
+  margin-bottom: 4px;
+}
+
+.zoneTitle {
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--navy);
+  margin: 0;
+}
+
+.zoneHint {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.previewWrap {
+  position: relative;
+  width: 100%;
+  height: 196px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.previewImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.changeBtn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 7px 14px;
+  border-radius: 999px;
+  box-shadow: var(--shadow-card);
+}
+
+/* SIGNATURE: scanner line sweeping top -> bottom */
+.scanBeam {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  height: 3px;
+  top: 12px;
+  background: var(--teal);
+  box-shadow: 0 0 18px 3px rgba(13, 148, 136, 0.6);
+  border-radius: 2px;
+  z-index: 3;
+  animation: scanDown 2s ease-in-out forwards;
+}
+
+.scanBeam::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 60px;
+  background: linear-gradient(to top, rgba(13, 148, 136, 0.18), transparent);
+}
+
+@keyframes scanDown {
+  0% {
+    top: 12px;
+  }
+  100% {
+    top: calc(100% - 14px);
+  }
+}
+
+.thumbRow {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.thumb {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.thumbImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.thumbRemove {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(15, 23, 42, 0.78);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.thumbRemove:hover {
+  background: var(--danger);
+}
+
+.addLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  background: none;
+  border: none;
+  color: var(--teal-dark);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 8px 0;
+  min-height: 44px;
+  margin-bottom: 12px;
+}
+
+.addLink:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.buttonRow {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+@media (min-width: 440px) {
+  .buttonRow {
+    flex-direction: row;
+  }
+  .buttonRow > * {
+    flex: 1;
+  }
+}
+
+.secondaryBtn {
+  min-height: 52px;
+  border-radius: var(--radius-button);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--navy);
+  font-size: 15px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.secondaryBtn:hover:not(:disabled) {
+  border-color: var(--teal);
+  background: var(--teal-light);
+}
+
+.secondaryBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.cta {
+  height: 56px;
+  width: 100%;
+  border: none;
+  border-radius: var(--radius-button);
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+  background: var(--safe);
+  box-shadow: 0 4px 14px rgba(5, 150, 105, 0.3);
+  transition: background 0.15s ease;
+  margin-bottom: 16px;
+}
+
+.cta:hover:not(:disabled) {
+  background: #047857;
+}
+
+.cta:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.errorText {
+  color: var(--danger);
+  font-size: 14px;
+  margin-top: 14px;
+  text-align: center;
+}
+
+.manualLink {
+  display: block;
+  width: 100%;
+  text-align: center;
+  background: none;
+  border: none;
+  color: var(--primary);
+  font-size: 15px;
+  font-weight: 600;
+  padding: 10px 0;
+  min-height: 44px;
+  margin-top: 4px;
+}
+
+.manualLink:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 15px;
+  font-weight: 500;
+  padding: 8px 0;
+  min-height: 44px;
+  margin-bottom: 8px;
+}
+
+.backLink:hover {
+  color: var(--navy);
+}

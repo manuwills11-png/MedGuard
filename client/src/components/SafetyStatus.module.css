@@ -1,0 +1,63 @@
+.safeCard {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: var(--safe-bg);
+  border: 1px solid rgba(5, 150, 105, 0.18);
+  border-left: 2px solid var(--safe);
+  border-radius: var(--radius-card);
+  padding: 20px;
+}
+
+.safeIcon {
+  color: var(--safe);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.alertCard {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: var(--danger-bg);
+  border: 1px solid rgba(220, 38, 38, 0.18);
+  border-left: 2px solid var(--danger);
+  border-radius: var(--radius-card);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.alertIcon {
+  color: var(--danger);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.safeTitle {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--safe);
+  margin: 0;
+}
+
+.alertTitle {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--danger);
+  margin: 0;
+}
+
+.subtitle {
+  font-size: 15px;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}

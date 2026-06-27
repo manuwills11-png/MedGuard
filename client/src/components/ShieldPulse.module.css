@@ -1,0 +1,65 @@
+.wrap {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* expanding amber ring that radiates outward while scanning */
+.ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid var(--amber);
+  opacity: 0;
+  animation: radiate 2.4s ease-out infinite;
+}
+
+.ring2 {
+  animation-delay: 0.8s;
+}
+
+.ring3 {
+  animation-delay: 1.6s;
+}
+
+@keyframes radiate {
+  0% {
+    transform: scale(0.55);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1.15);
+    opacity: 0;
+  }
+}
+
+.shield {
+  color: var(--amber);
+  animation: breathe 2.4s ease-in-out infinite;
+  filter: drop-shadow(0 0 12px rgba(245, 158, 11, 0.45));
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.35));
+  }
+  50% {
+    transform: scale(1.08);
+    filter: drop-shadow(0 0 22px rgba(245, 158, 11, 0.65));
+  }
+}
+
+/* When motion is reduced, hold a steady glow instead of pulsing */
+@media (prefers-reduced-motion: reduce) {
+  .ring {
+    display: none;
+  }
+  .shield {
+    filter: drop-shadow(0 0 14px rgba(245, 158, 11, 0.5));
+  }
+}

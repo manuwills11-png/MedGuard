@@ -61,49 +61,94 @@ async function checkAllInteractions(generics) {
   return results.filter(Boolean);
 }
 
-app.post('/api/analyze', upload.single('image'), async (req, res) => {
-  if (!req.file) {
+// Run Groq vision on a single image buffer and return the array of brand names it found.
+async function extractBrandsFromImage(buffer, mimeType) {
+  const base64Image = buffer.toString('base64');
+
+  const completion = await groq.chat.completions.create({
+    model: 'meta-llama/llama-4-scout-17b-16e-instruct',
+    messages: [
+      {
+        role: 'user',
+        content: [
+          {
+            type: 'text',
+            text: 'Look at this Indian pill strip image. Extract every drug name visible. Return JSON only: {drugs: [...]}. No explanation. JSON only.',
+          },
+          {
+            type: 'image_url',
+            image_url: { url: `data:${mimeType};base64,${base64Image}` },
+          },
+        ],
+      },
+    ],
+  });
+
+  const raw = completion.choices[0].message.content;
+  const jsonMatch = raw.match(/\{[\s\S]*\}/);
+  const parsed = JSON.parse(jsonMatch ? jsonMatch[0] : raw);
+  return parsed.drugs || [];
+}
+
+// Map brand names to { brand, generic } objects, deduplicating by brand (case-insensitive).
+function buildDrugList(brands) {
+  const seen = new Set();
+  const drugs = [];
+  for (const brand of brands) {
+    if (typeof brand !== 'string') continue;
+    const key = brand.trim().toLowerCase();
+    if (!key || seen.has(key)) continue;
+    seen.add(key);
+    drugs.push({ brand, generic: drugMap[brand] || brand.toLowerCase() });
+  }
+  return drugs;
+}
+
+app.post('/api/analyze', upload.array('images', 4), async (req, res) => {
+  if (!req.files || req.files.length === 0) {
     return res.status(400).json({ error: 'No image uploaded' });
   }
 
   try {
-    const base64Image = req.file.buffer.toString('base64');
-    const mimeType = req.file.mimetype;
+    // Run vision on every image in parallel, then merge + dedupe the brands.
+    const brandArrays = await Promise.all(
+      req.files.map((file) => extractBrandsFromImage(file.buffer, file.mimetype)),
+    );
+    const allBrands = brandArrays.flat();
 
-    const completion = await groq.chat.completions.create({
-      model: 'meta-llama/llama-4-scout-17b-16e-instruct',
-      messages: [
-        {
-          role: 'user',
-          content: [
-            {
-              type: 'text',
-              text: 'Look at this Indian pill strip image. Extract every drug name visible. Return JSON only: {drugs: [...]}. No explanation. JSON only.',
-            },
-            {
-              type: 'image_url',
-              image_url: { url: `data:${mimeType};base64,${base64Image}` },
-            },
-          ],
-        },
-      ],
-    });
-
-    const raw = completion.choices[0].message.content;
-    const jsonMatch = raw.match(/\{[\s\S]*\}/);
-    const parsed = JSON.parse(jsonMatch ? jsonMatch[0] : raw);
-
-    const drugs = (parsed.drugs || []).map((brand) => ({
-      brand,
-      generic: drugMap[brand] || brand.toLowerCase(),
-    }));
-
+    const drugs = buildDrugList(allBrands);
     const conflicts = await checkAllInteractions(drugs.map((d) => d.generic));
 
     res.json({ drugs, conflicts });
   } catch (err) {
-    console.error(err);
+    console.error('--- /api/analyze error ---');
+    console.error('Message:', err.message);
+    console.error('Stack:', err.stack);
+    console.error('GROQ_API_KEY present:', Boolean(process.env.GROQ_API_KEY));
+    console.error('Images received:', req.files ? req.files.length : 0);
+    console.error('--------------------------');
     res.status(500).json({ error: 'Failed to analyze image' });
+  }
+});
+
+app.post('/api/check-interactions', async (req, res) => {
+  const generics = req.body && req.body.generics;
+  if (!Array.isArray(generics) || generics.length === 0) {
+    return res.status(400).json({ error: 'No medicines provided' });
+  }
+
+  try {
+    const cleaned = generics.filter((g) => typeof g === 'string' && g.trim());
+    const drugs = cleaned.map((generic) => ({ brand: generic, generic }));
+    const conflicts = await checkAllInteractions(cleaned);
+
+    res.json({ drugs, conflicts });
+  } catch (err) {
+    console.error('--- /api/check-interactions error ---');
+    console.error('Message:', err.message);
+    console.error('Stack:', err.stack);
+    console.error('-------------------------------------');
+    res.status(500).json({ error: 'Failed to check interactions' });
   }
 });
 

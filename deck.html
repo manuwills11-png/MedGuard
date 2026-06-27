@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MedGuard - CSI Tech Genesis '26 Pitch Deck</title>
+  <!-- Google Fonts: Sora and Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet">
+
+  <style>
+    /* Premium CSS Variables */
+    :root {
+      --bg-dark: #0D1117;
+      --bg-card: #161B22;
+      --bg-border: #30363D;
+      --color-primary: #F59E0B;
+      /* Amber accent */
+      --color-primary-glow: rgba(245, 158, 11, 0.15);
+      --color-text-main: #F0F6FC;
+      --color-text-muted: #8B949E;
+      --color-danger: #EF4444;
+      --color-success: #10B981;
+      --font-title: 'Sora', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --shadow-glow: 0 0 25px rgba(245, 158, 11, 0.25);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--color-text-main);
+      font-family: var(--font-body);
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Presentation Layout */
+    .deck-container {
+      flex: 1;
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Slide Defaults */
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      transform: translateY(20px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4% 8%;
+    }
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .slide-content {
+      max-width: 1200px;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+
+    /* Top Progress Bar & Header Info */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 100;
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-family: var(--font-title);
+      font-weight: 800;
+      font-size: 1.25rem;
+      letter-spacing: -0.05em;
+    }
+
+    .logo-container span {
+      color: var(--color-primary);
+    }
+
+    .logo-shield {
+      background: var(--color-primary);
+      color: var(--bg-dark);
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
+    }
+
+    .hackathon-badge {
+      background: rgba(48, 54, 61, 0.6);
+      border: 1px border var(--bg-border);
+      padding: 0.4rem 1rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--color-text-muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    /* Progress Indicators */
+    .progress-dots {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background-color: var(--bg-border);
+      transition: all 0.4s ease;
+      cursor: pointer;
+    }
+
+    .dot.active {
+      background-color: var(--color-primary);
+      width: 28px;
+      box-shadow: 0 0 10px rgba(245, 158, 11, 0.6);
+    }
+
+    /* Premium Typography */
+    h1,
+    h2,
+    h3 {
+      font-family: var(--font-title);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+    }
+
+    .slide-headline {
+      font-size: 3rem;
+      line-height: 1.15;
+      font-weight: 800;
+      background: linear-gradient(135deg, #FFFFFF 0%, #D2D9E2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .slide-sub {
+      color: var(--color-primary);
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      font-size: 0.85rem;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Navigation Controls Footer */
+    .controls {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      z-index: 100;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .btn-nav {
+      background: var(--bg-card);
+      border: 1px solid var(--bg-border);
+      color: var(--color-text-main);
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-nav:hover {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+      box-shadow: 0 0 15px rgba(245, 158, 11, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .slide-number {
+      font-family: var(--font-title);
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--color-text-muted);
+      min-width: 50px;
+      text-align: center;
+    }
+
+    /* Grid & Cards Layouts */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 3rem;
+      align-items: center;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--bg-border);
+      border-radius: 16px;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: transparent;
+      transition: background 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      border-color: #484f58;
+    }
+
+    .card.primary-accent::before {
+      background: var(--color-primary);
+    }
+
+    .card.primary-accent {
+      box-shadow: inset 0 0 20px rgba(245, 158, 11, 0.03);
+    }
+
+    .stat-number {
+      font-size: 3.5rem;
+      font-weight: 800;
+      color: var(--color-primary);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+      font-family: var(--font-title);
+      letter-spacing: -0.05em;
+    }
+
+    .stat-label {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--color-text-main);
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-desc {
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+      line-height: 1.4;
+    }
+
+    /* Slide specific styles */
+    /* Slide 1 - Cover */
+    .problem-highlight {
+      border-left: 4px solid var(--color-primary);
+      padding-left: 2rem;
+      margin: 1.5rem 0;
+    }
+
+    .problem-text {
+      font-size: 2.2rem;
+      line-height: 1.3;
+      font-weight: 700;
+      color: #FFFFFF;
+      letter-spacing: -0.03em;
+    }
+
+    /* Slide 2 - Flow Steps */
+    .flow-steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      position: relative;
+    }
+
+    .flow-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      position: relative;
+    }
+
+    .flow-step-num {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--bg-card);
+      border: 2px solid var(--color-primary);
+      color: var(--color-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-family: var(--font-title);
+      font-size: 1.1rem;
+      margin-bottom: 1.25rem;
+      box-shadow: 0 0 15px var(--color-primary-glow);
+    }
+
+    .flow-step-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--color-text-main);
+    }
+
+    .flow-step-desc {
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+      line-height: 1.4;
+    }
+
+    .flow-step:not(:last-child)::after {
+      content: '→';
+      position: absolute;
+      top: 24px;
+      right: -20%;
+      color: var(--bg-border);
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    /* Slide 3 - Simulated Phone Demo UI */
+    .phone-simulator {
+      background: #000;
+      width: 280px;
+      height: 520px;
+      border-radius: 36px;
+      border: 8px solid #1f242c;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 2px 2px #30363d;
+      margin: 0 auto;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      font-family: var(--font-body);
+    }
+
+    .phone-notch {
+      background: #1f242c;
+      width: 120px;
+      height: 20px;
+      border-bottom-left-radius: 12px;
+      border-bottom-right-radius: 12px;
+      margin: 0 auto;
+      z-index: 10;
+    }
+
+    .phone-screen {
+      flex: 1;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      color: #fff;
+      font-size: 0.8rem;
+    }
+
+    .phone-header {
+      font-family: var(--font-title);
+      font-weight: 700;
+      color: var(--color-primary);
+      text-align: center;
+      margin-top: 0.25rem;
+      font-size: 0.9rem;
+    }
+
+    .phone-step-card {
+      background: var(--bg-card);
+      border: 1px solid var(--bg-border);
+      border-radius: 12px;
+      padding: 0.85rem;
+      margin: 0.5rem 0;
+      transition: all 0.3s ease;
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    .phone-step-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .phone-pill-tag {
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      padding: 0.25rem 0.5rem;
+      border-radius: 6px;
+      display: inline-block;
+      margin: 0.2rem;
+      font-weight: 600;
+      font-size: 0.7rem;
+    }
+
+    .warning-box {
+      border: 1px solid var(--color-danger);
+      background: rgba(239, 68, 68, 0.1);
+      border-radius: 12px;
+      padding: 0.75rem;
+      color: #FF8585;
+      font-size: 0.7rem;
+      line-height: 1.4;
+      text-align: center;
+    }
+
+    .pulsing-audio {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 20px;
+      padding: 0.5rem 1rem;
+      color: var(--color-success);
+      margin-top: 0.5rem;
+    }
+
+    .audio-icon-pulse {
+      background: var(--color-success);
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-right: 8px;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+        opacity: 1;
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+      }
+
+      70% {
+        transform: scale(1.3);
+        opacity: 0.5;
+        box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+      }
+
+      100% {
+        transform: scale(1);
+        opacity: 1;
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+      }
+    }
+
+    .demo-selector-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .demo-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--bg-border);
+      color: var(--color-text-main);
+      padding: 0.75rem 1rem;
+      border-radius: 10px;
+      cursor: pointer;
+      text-align: left;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .demo-btn.active {
+      border-color: var(--color-primary);
+      background: var(--color-primary-glow);
+      color: #fff;
+    }
+
+    .demo-btn-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--bg-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+    }
+
+    .demo-btn.active .demo-btn-num {
+      background: var(--color-primary);
+      color: var(--bg-dark);
+    }
+
+    /* Technology Slide grids */
+    .tech-icon {
+      font-size: 1.5rem;
+      color: var(--color-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    /* Slide 6 - Team presentation card */
+    .team-badge {
+      display: inline-block;
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      color: var(--color-primary);
+      padding: 0.5rem 1.25rem;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin-top: 1rem;
+      font-family: var(--font-title);
+    }
+
+    .team-names-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .team-member {
+      background: rgba(22, 27, 34, 0.6);
+      border: 1px solid var(--bg-border);
+      border-radius: 12px;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .team-member-name {
+      font-weight: 700;
+      color: #fff;
+      font-size: 1rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .team-member-role {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+
+    /* Animations & Utilities */
+    .glow-text {
+      text-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
+    }
+
+    /* Responsive scaling for small displays */
+    @media (max-height: 700px) {
+      .slide-headline {
+        font-size: 2.2rem;
+      }
+
+      .problem-text {
+        font-size: 1.6rem;
+      }
+
+      .stat-number {
+        font-size: 2.5rem;
+      }
+
+      .card {
+        padding: 1.25rem;
+      }
+
+      .phone-simulator {
+        width: 220px;
+        height: 400px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Top Navigation Header -->
+  <header>
+    <div class="logo-container">
+      <div class="logo-shield">🛡️</div>
+      Med<span>Guard</span>
+    </div>
+
+    <div class="progress-dots" id="progressDots">
+      <!-- Dots will be populated dynamically -->
+    </div>
+
+    <div class="hackathon-badge">
+      CSI Tech Genesis '26
+    </div>
+  </header>
+
+  <!-- Slide Deck Container -->
+  <div class="deck-container" id="deckContainer">
+
+    <!-- Slide 1: Problem -->
+    <section class="slide active" id="slide-1">
+      <div class="slide-content">
+        <div class="grid-2">
+          <div>
+            <div class="slide-sub">The Hidden Threat</div>
+            <h1 class="slide-headline">Silent Prescriptions,<br><span class="glow-text"
+                style="color: var(--color-primary);">Dangerous Realities</span></h1>
+            <div class="problem-highlight">
+              <p class="problem-text">"1 in 3 elderly Indians takes a dangerous drug combination — without knowing it."
+              </p>
+            </div>
+          </div>
+          <div class="grid-3" style="grid-template-columns: 1fr; gap: 1rem;">
+            <div class="card primary-accent">
+              <div class="stat-number">140M</div>
+              <div class="stat-label">Elderly Indians</div>
+              <div class="stat-desc">A rapidly growing population at high risk of multi-prescription errors.</div>
+            </div>
+            <div class="card">
+              <div class="stat-number">6.8</div>
+              <div class="stat-label">Daily Medicines</div>
+              <div class="stat-desc">Average number of pills taken daily per senior citizen in urban centers.</div>
+            </div>
+            <div class="card">
+              <div class="stat-number">45%</div>
+              <div class="stat-label">Multiple Doctors</div>
+              <div class="stat-desc">Prescribed by different doctors who never coordinate or communicate.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 2: Solution -->
+    <section class="slide" id="slide-2">
+      <div class="slide-content">
+        <div style="text-align: center; margin-bottom: 1rem;">
+          <div class="slide-sub">Our Approach</div>
+          <h2 class="slide-headline">The MedGuard Safe-Guardian</h2>
+          <p
+            style="color: var(--color-text-muted); margin-top: 0.5rem; max-width: 700px; margin-left: auto; margin-right: auto;">
+            A zero-friction, camera-first web application designed specifically for the accessibility needs of Indian
+            seniors and their caregivers.
+          </p>
+        </div>
+        <div class="flow-steps">
+          <div class="card flow-step">
+            <div class="flow-step-num">1</div>
+            <div class="flow-step-title">Photograph</div>
+            <div class="flow-step-desc">Seniors snap a single photo of their current pill strips. No typing required.
+            </div>
+          </div>
+          <div class="card flow-step">
+            <div class="flow-step-num">2</div>
+            <div class="flow-step-title">Identify</div>
+            <div class="flow-step-desc">Advanced vision OCR detects Indian brand names and maps them to chemical
+              generics.</div>
+          </div>
+          <div class="card flow-step">
+            <div class="flow-step-num">3</div>
+            <div class="flow-step-title">Warn</div>
+            <div class="flow-step-desc">Real-time interaction check queries FDA databases to detect contraindications.
+            </div>
+          </div>
+          <div class="card flow-step">
+            <div class="flow-step-num">4</div>
+            <div class="flow-step-title">Voice Alert</div>
+            <div class="flow-step-desc">Spoken guidance plays in the senior's native Indian language with clear color
+              codes.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 3: Demo (Interactive) -->
+    <section class="slide" id="slide-3">
+      <div class="slide-content">
+        <div class="grid-2">
+          <div>
+            <div class="slide-sub">Interactive Journey</div>
+            <h2 class="slide-headline">Frictionless Flow in Action</h2>
+            <p style="color: var(--color-text-muted); margin: 1rem 0 2rem 0; line-height: 1.5;">
+              See how a user scanning a strip of <strong>Pantop 40</strong> (Pantoprazole) and <strong>Ecosprin
+                75</strong> (Aspirin) triggers real-time visual and audio conflict warnings.
+            </p>
+            <div class="demo-selector-buttons">
+              <button class="demo-btn active" onclick="setDemoStep(1)">
+                <div class="demo-btn-num">1</div>
+                <div>Capture Pill Strips</div>
+              </button>
+              <button class="demo-btn" onclick="setDemoStep(2)">
+                <div class="demo-btn-num">2</div>
+                <div>AI OCR Brand Mapping</div>
+              </button>
+              <button class="demo-btn" onclick="setDemoStep(3)">
+                <div class="demo-btn-num">3</div>
+                <div>FDA Interaction Alert</div>
+              </button>
+              <button class="demo-btn" onclick="setDemoStep(4)">
+                <div class="demo-btn-num">4</div>
+                <div>Vernacular Voice Warning</div>
+              </button>
+            </div>
+          </div>
+          <div>
+            <!-- Simulated Phone screen -->
+            <div class="phone-simulator">
+              <div class="phone-notch"></div>
+              <div class="phone-screen" id="phoneScreen">
+                <!-- Step content injected by JavaScript -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 4: Technology -->
+    <section class="slide" id="slide-4">
+      <div class="slide-content">
+        <div style="text-align: center; margin-bottom: 1.5rem;">
+          <div class="slide-sub">Under The Hood</div>
+          <h2 class="slide-headline">The MedGuard Engine</h2>
+        </div>
+        <div class="grid-4">
+          <div class="card primary-accent">
+            <div class="tech-icon">👁️</div>
+            <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Groq Llama 4 Vision</h3>
+            <p style="font-size: 0.8rem; color: var(--color-text-muted); line-height: 1.5;">
+              Uses cutting-edge visual OCR to read medical text from pill strips instantly, bypassing manual text
+              inputs.
+            </p>
+          </div>
+          <div class="card">
+            <div class="tech-icon">🧬</div>
+            <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">OpenFDA API</h3>
+            <p style="font-size: 0.8rem; color: var(--color-text-muted); line-height: 1.5;">
+              Real-time cross-referencing against 7,000+ scientific drug safety warning datasets and clinical
+              literature.
+            </p>
+          </div>
+          <div class="card">
+            <div class="tech-icon">🗣️</div>
+            <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Web Speech API</h3>
+            <p style="font-size: 0.8rem; color: var(--color-text-muted); line-height: 1.5;">
+              Instantly synthesizes safety results into speech in Indian languages to accommodate vision-impaired
+              seniors.
+            </p>
+          </div>
+          <div class="card">
+            <div class="tech-icon">🧠</div>
+            <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">ConflictRAG</h3>
+            <p style="font-size: 0.8rem; color: var(--color-text-muted); line-height: 1.5;">
+              Advanced Natural Language Inference (NLI) model architecture to categorize warnings into clear Severity
+              Levels.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 5: Impact -->
+    <section class="slide" id="slide-5">
+      <div class="slide-content">
+        <div class="grid-2">
+          <div>
+            <div class="slide-sub">Social Impact</div>
+            <h2 class="slide-headline">Democratizing Elder Safety</h2>
+            <p style="color: var(--color-text-muted); margin-top: 1rem; line-height: 1.6;">
+              MedGuard is engineered to address the actual digital habits of elderly Indians. We minimize barriers to
+              access, ensuring that life-saving checks are available to everyone.
+            </p>
+          </div>
+          <div class="grid-2" style="grid-template-columns: 1fr 1fr; gap: 1.25rem;">
+            <div class="card">
+              <h3 style="font-size: 1rem; color: var(--color-primary); margin-bottom: 0.5rem;">Zero Installation</h3>
+              <p style="font-size: 0.8rem; color: var(--color-text-muted); line-height: 1.4;">
+                Works instantly inside any basic mobile browser. No storage space or App Store struggles.
+              </p>
+            </div>
+            <div class="card">
+              <h3 style="font-size: 1rem; color: var(--color-primary); margin-bottom: 0.5rem;">Vernacular First</h3>
+              <p style="font-size: 0.8rem; color: var(--color-text-muted); line-height: 1.4;">
+                Full voice warnings in English, Hindi (हिंदी), Malayalam (മലയാളം), and Tamil (தமிழ்).
+              </p>
+            </div>
+            <div class="card">
+              <h3 style="font-size: 1rem; color: var(--color-primary); margin-bottom: 0.5rem;">Always Free</h3>
+              <p style="font-size: 0.8rem; color: var(--color-text-muted); line-height: 1.4;">
+                Zero cost for critical health audits. Open for all elderly households across India.
+              </p>
+            </div>
+            <div class="card">
+              <h3 style="font-size: 1rem; color: var(--color-primary); margin-bottom: 0.5rem;">Future Roadmap</h3>
+              <p style="font-size: 0.8rem; color: var(--color-text-muted); line-height: 1.4;">
+                WhatsApp bot integration for seamless daily scan updates and automated medication schedules.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 6: Team -->
+    <section class="slide" id="slide-6">
+      <div class="slide-content" style="text-align: center;">
+        <div class="slide-sub">CSI Tech Genesis '26</div>
+        <h2 class="slide-headline" style="font-size: 3.5rem; margin-bottom: 1rem;">Saving Lives,<br><span
+            style="color: var(--color-primary);" class="glow-text">One Strip at a Time</span></h2>
+
+        <p style="color: var(--color-text-muted); font-size: 1.1rem; max-width: 600px; margin: 0 auto 1.5rem auto;">
+          Developing digital infrastructure for smart cities, health equity, and high-impact social sustainability.
+        </p>
+
+        <div class="team-names-grid" style="max-width: 800px; margin-left: auto; margin-right: auto;">
+          <div class="team-member">
+            <div class="team-member-name">Manu Wills</div>
+            <div class="team-member-role">UI/UX & Frontend Lead</div>
+          </div>
+          <div class="team-member">
+            <div class="team-member-name">Leenal</div>
+            <div class="team-member-role">Data Engine & ML Mapping</div>
+          </div>
+          <div class="team-member">
+            <div class="team-member-name">Sidharth</div>
+            <div class="team-member-role">Backend & API Architect</div>
+          </div>
+        </div>
+
+        <div>
+          <span class="team-badge">VIT Chennai — CSI Tech Genesis '26</span>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Slide Footer Controls -->
+  <div class="controls">
+    <button class="btn-nav" onclick="prevSlide()" aria-label="Previous slide">←</button>
+    <div class="slide-number" id="slideNum">1 / 6</div>
+    <button class="btn-nav" onclick="nextSlide()" aria-label="Next slide">→</button>
+  </div>
+
+  <!-- Presenter Mode Scripts -->
+  <script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const dotsContainer = document.getElementById('progressDots');
+    const slideNumEl = document.getElementById('slideNum');
+
+    // Create progress dots
+    slides.forEach((_, index) => {
+      const dot = document.createElement('div');
+      dot.classList.add('dot');
+      if (index === 0) dot.classList.add('active');
+      dot.addEventListener('click', () => goToSlide(index));
+      dotsContainer.appendChild(dot);
+    });
+
+    const dots = document.querySelectorAll('.dot');
+
+    function updateDeck() {
+      slides.forEach((slide, index) => {
+        if (index === currentSlide) {
+          slide.classList.add('active');
+          dots[index].classList.add('active');
+        } else {
+          slide.classList.remove('active');
+          dots[index].classList.remove('active');
+        }
+      });
+      slideNumEl.textContent = `${currentSlide + 1} / ${slides.length}`;
+
+      // If we land on demo slide, reset demo view
+      if (currentSlide === 2) {
+        setDemoStep(1);
+      }
+    }
+
+    function nextSlide() {
+      if (currentSlide < slides.length - 1) {
+        currentSlide++;
+        updateDeck();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+        updateDeck();
+      }
+    }
+
+    function goToSlide(index) {
+      currentSlide = index;
+      updateDeck();
+    }
+
+    // Keyboard support
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') {
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'Backspace') {
+        prevSlide();
+      }
+    });
+
+    // Interactive Demo Code for Slide 3
+    const demoSteps = {
+      1: `
+        <div class="phone-header">📸 MedGuard Camera</div>
+        <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; border: 2px dashed var(--bg-border); border-radius: 16px; margin: 1rem 0; background: #161a22;">
+          <span style="font-size: 3rem; margin-bottom: 1rem;">📷</span>
+          <p style="color: var(--color-text-muted); text-align: center; font-size: 0.75rem; padding: 0 1rem;">
+            Align medicine strips inside the frame and take a photo.
+          </p>
+        </div>
+        <div style="background: var(--color-primary); color: #000; text-align: center; padding: 0.6rem; border-radius: 8px; font-weight: 700; font-size: 0.8rem;">
+          SCAN PILL STRIPS
+        </div>
+      `,
+      2: `
+        <div class="phone-header">🧠 AI Extraction</div>
+        <div style="flex: 1; margin: 1rem 0; display: flex; flex-direction: column; gap: 0.75rem;">
+          <p style="color: var(--color-text-muted); font-size: 0.75rem;">Brand names extracted via Groq Llama 4 Vision & mapped to generic database:</p>
+          <div class="phone-step-card visible">
+            <span style="color: var(--color-primary); font-weight: bold;">Strip 1:</span> Pantop 40
+            <div><span class="phone-pill-tag">pantoprazole</span></div>
+          </div>
+          <div class="phone-step-card visible" style="transition-delay: 0.2s;">
+            <span style="color: var(--color-primary); font-weight: bold;">Strip 2:</span> Ecosprin 75
+            <div><span class="phone-pill-tag">aspirin</span></div>
+          </div>
+        </div>
+        <div style="border: 1px solid var(--bg-border); text-align: center; padding: 0.5rem; border-radius: 8px; color: var(--color-text-muted); font-size: 0.75rem;">
+          OCR Processing Complete
+        </div>
+      `,
+      3: `
+        <div class="phone-header">⚠️ Dangerous Interaction</div>
+        <div style="flex: 1; margin: 1rem 0; display: flex; flex-direction: column; justify-content: center; gap: 1rem;">
+          <div class="warning-box">
+            <div style="font-weight: 700; font-size: 0.85rem; margin-bottom: 0.25rem; color: var(--color-danger);">HIGH SEVERITY CONFLICT</div>
+            Pantoprazole + Aspirin may increase the risk of stomach ulcers or gastrointestinal bleeding.
+          </div>
+          <div style="font-size: 0.75rem; text-align: center; color: var(--color-text-muted);">
+            Source: FDA Drug Label Database
+          </div>
+        </div>
+        <div style="background: var(--color-danger); color: #fff; text-align: center; padding: 0.6rem; border-radius: 8px; font-weight: 700; font-size: 0.8rem;">
+          CRITICAL INTERACTION WARNING
+        </div>
+      `,
+      4: `
+        <div class="phone-header">🔊 Localized Voice Alert</div>
+        <div style="flex: 1; margin: 1rem 0; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 1.5rem;">
+          <div class="pulsing-audio">
+            <div class="audio-icon-pulse"></div>
+            <strong>Malayalam Audio Playing</strong>
+          </div>
+          <div style="text-align: center; border: 1px solid var(--bg-border); background: var(--bg-card); padding: 1rem; border-radius: 12px;">
+            <p style="font-size: 0.85rem; font-weight: bold; margin-bottom: 0.5rem; color: #fff;">"ശ്രദ്ധിക്കുക: പാൻ്റോസിഡും എക്കോസ്പ്രിനും ഒരുമിച്ച് കഴിക്കുന്നത് ദോഷകരമാകാം."</p>
+            <p style="font-size: 0.7rem; color: var(--color-text-muted);">Translates to warning of gastric bleeding risk.</p>
+          </div>
+        </div>
+        <div style="background: var(--color-success); color: #fff; text-align: center; padding: 0.6rem; border-radius: 8px; font-weight: 700; font-size: 0.8rem;">
+          VOICE GUIDANCE ACTIVE
+        </div>
+      `
+    };
+
+    function setDemoStep(stepNum) {
+      // Update simulator screen content
+      document.getElementById('phoneScreen').innerHTML = demoSteps[stepNum];
+
+      // Update active state in demo button list
+      const buttons = document.querySelectorAll('.demo-btn');
+      buttons.forEach((btn, idx) => {
+        if (idx === (stepNum - 1)) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+    }
+
+    // Initialize first demo step
+    setDemoStep(1);
+  </script>
+</body>
+
+</html>

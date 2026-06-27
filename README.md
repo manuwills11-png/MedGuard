@@ -96,6 +96,6 @@ The application will launch locally at the URL output by Vite (usually `http://l
 **Theme**: Smart Cities, Sustainability & Social Impact
 
 Developed by the **MedGuard Team**:
-* **Manu Wills**: UI/UX Design & Frontend Engineering Lead
+* **Martin Wills**: UI/UX Design & Frontend Engineering Lead
 * **Ananthakrishnan Unni**: Data Engine & Machine Learning Mapping
 * **Adwaith M**: Backend Server & OpenFDA API Architect

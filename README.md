@@ -95,7 +95,7 @@ The application will launch locally at the URL output by Vite (usually `http://l
 **CSI Tech Genesis '26 Hackathon**  
 **Theme**: Smart Cities, Sustainability & Social Impact
 
-Developed by the **MedGuard Team** (VIT Chennai):
+Developed by the **MedGuard Team**:
 * **Manu Wills**: UI/UX Design & Frontend Engineering Lead
-* **Leenal**: Data Engine & Machine Learning Mapping
-* **Sidharth**: Backend Server & OpenFDA API Architect
+* **Ananthakrishnan Unni**: Data Engine & Machine Learning Mapping
+* **Adwaith M**: Backend Server & OpenFDA API Architect
